@@ -1,0 +1,53 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+struct Node {
+    int data;
+    struct Node *next;
+};
+
+struct Node *front = NULL, *rear = NULL;
+
+void enqueue(int val) {
+    struct Node *temp = malloc(sizeof(struct Node));
+    temp->data = val;
+    if(front == NULL) {
+        front = rear = temp;
+        rear->next = front;
+    } else {
+        rear->next = temp;
+        rear = temp;
+        rear->next = front;
+    }
+}
+
+int dequeue() {
+    if(front == NULL) return -1;
+    int val = front->data;
+    if(front == rear) {
+        free(front);
+        front = rear = NULL;
+    } else {
+        struct Node *temp = front;
+        front = front->next;
+        rear->next = front;
+        free(temp);
+    }
+    return val;
+}
+
+void display() {
+    if(front == NULL) return;
+    struct Node *temp = front;
+    do {
+        printf("%d ", temp->data);
+        temp = temp->next;
+    } while(temp != front);
+}
+
+int main() {
+    enqueue(10); enqueue(20); enqueue(30);
+    display();
+    printf("\n%d", dequeue());
+    return 0;
+}
